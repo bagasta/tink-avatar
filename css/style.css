@@ -127,6 +127,7 @@ nav.scrolled .logo, nav.scrolled .nav-links a {
 
 .nav-links {
     display: flex;
+    flex-wrap: wrap;
     gap: 2.5rem;
 }
 
@@ -159,7 +160,7 @@ nav.scrolled .logo, nav.scrolled .nav-links a {
 
 /* Hero Section */
 .hero {
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     align-items: center;
     padding: 0 5%;
@@ -173,6 +174,7 @@ nav.scrolled .logo, nav.scrolled .nav-links a {
     z-index: 1;
     max-width: 700px;
     color: var(--color-white);
+    width: 100%;
 }
 
 .hero h1 {
@@ -316,6 +318,10 @@ nav.scrolled .logo, nav.scrolled .nav-links a {
     margin: 0 auto;
 }
 
+.stats-container > * {
+    min-width: 160px;
+}
+
 .stat-item {
     text-align: center;
     color: var(--color-white);
@@ -432,7 +438,8 @@ footer {
 
 .avatar-modal-container {
     width: 95vw;
-    height: 95vh;
+    height: clamp(560px, calc((95vw - 420px) * 9 / 16), 820px);
+    max-height: 92vh;
     max-width: 1600px;
     background: rgba(255, 255, 255, 0.95);
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -481,21 +488,26 @@ footer {
     position: relative;
     background: #000;
     overflow: hidden;
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
+}
+
+.modal-avatar-area iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
 }
 
 .avatar-iframe {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    min-width: 100%;
+    position: relative;
+    inset: 0;
+    width: 100%;
+    height: 100%;
     min-height: 100%;
-    width: auto;
-    height: auto;
-    aspect-ratio: 16 / 9;
     border: none;
     display: block;
-    object-fit: cover;
 }
 
 .iframe-placeholder {
@@ -532,7 +544,7 @@ footer {
     flex: 1;
     min-width: 350px;
     max-width: 450px;
-    background: #F9FAFB;
+    background: linear-gradient(180deg, #FDFEFF 0%, #F7FAFC 100%);
     display: flex;
     flex-direction: column;
     border-left: 1px solid rgba(0, 0, 0, 0.05);
@@ -545,21 +557,57 @@ footer {
     padding: 24px 32px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     border-bottom: 1px solid #E5E7EB;
 }
 
-.chat-title {
+.chat-title-wrap {
     display: flex;
     align-items: center;
     gap: 12px;
+}
+
+.chat-title-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(47, 163, 244, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-gold);
+    flex-shrink: 0;
+}
+
+.chat-title-meta {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.chat-title {
     font-weight: 600;
     font-size: 1.1rem;
     font-family: var(--font-heading);
     color: var(--color-navy);
+    margin: 0;
 }
 
-.chat-title svg {
-    stroke: var(--color-gold);
+.chat-status {
+    font-size: 0.82rem;
+    color: #6B7280;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+.chat-status span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #22C55E;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.18);
 }
 
 .chat-messages {
@@ -570,6 +618,17 @@ footer {
     flex-direction: column;
     gap: 16px;
     background: #F9FAFB;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(148, 163, 184, 0.7) transparent;
+}
+
+.chat-messages::-webkit-scrollbar {
+    width: 8px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.55);
+    border-radius: 999px;
 }
 
 .chat-bubble {
@@ -605,11 +664,16 @@ footer {
     display: flex;
     align-items: center;
     gap: 12px;
+    position: sticky;
+    bottom: 0;
 }
 
 .chat-attach {
-    background: none;
-    border: none;
+    background: #F3F4F6;
+    border: 1px solid #E5E7EB;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
     color: #6B7280;
     cursor: pointer;
     display: flex;
@@ -620,6 +684,7 @@ footer {
 
 .chat-attach:hover {
     color: var(--color-gold);
+    border-color: rgba(47, 163, 244, 0.45);
 }
 
 .chat-input-area input {
@@ -659,10 +724,109 @@ footer {
     transform: scale(1.05);
 }
 
+@media (max-width: 1200px) {
+    nav {
+        padding: 1rem 4%;
+    }
+
+    .nav-links {
+        gap: 1.25rem;
+    }
+
+    .stats-container {
+        gap: 2.5rem;
+    }
+
+    .modal-sidebar {
+        min-width: 320px;
+    }
+}
+
 /* ==========================================================
    RESPONSIVENESS (TABLET & MOBILE)
    ========================================================== */
 @media (max-width: 992px) {
+    nav {
+        flex-wrap: wrap;
+        gap: 0.75rem 1rem;
+        align-items: center;
+    }
+
+    .nav-links {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+        gap: 0.6rem 1rem;
+        padding: 0.45rem 0;
+    }
+
+    .nav-links a {
+        font-size: 0.92rem;
+    }
+
+    nav .btn {
+        margin-left: auto;
+        padding: 0.65rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    nav.scrolled {
+        padding: 0.8rem 4%;
+    }
+
+    .hero {
+        min-height: 100svh;
+        padding-top: 7rem;
+        background-attachment: scroll;
+    }
+
+    .hero-content {
+        max-width: 100%;
+    }
+
+    .hero-cta {
+        flex-wrap: wrap;
+    }
+
+    .hero-cta .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .services {
+        padding: 5.5rem 5% 5rem;
+    }
+
+    .services-grid {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+        margin-top: 2.5rem;
+    }
+
+    .service-card {
+        padding: 2rem 1.5rem;
+    }
+
+    .stats {
+        padding: 4.5rem 5%;
+    }
+
+    .stats-container {
+        gap: 1.75rem;
+    }
+
+    .stat-number {
+        font-size: clamp(2.1rem, 9vw, 3rem);
+    }
+
+    .cta-section {
+        padding: 5rem 5%;
+    }
+
+    .cta-box {
+        padding: 2.75rem 1.5rem;
+    }
+
     .avatar-modal-container {
         flex-direction: column;
         width: 100vw;
@@ -677,8 +841,8 @@ footer {
     }
     
     .modal-avatar-area {
-        flex: 0 0 45vh; /* Fixed percentage of screen for avatar */
-        min-height: 45vh;
+        flex: 0 0 42vh;
+        min-height: 42vh;
         width: 100%;
     }
     
@@ -688,7 +852,7 @@ footer {
         max-width: none;
         border-left: none;
         border-top: 1px solid rgba(0, 0, 0, 0.05);
-        height: 55vh; /* Remaining height */
+        height: 58vh;
     }
     
     .chat-messages {
@@ -715,20 +879,78 @@ footer {
 }
 
 @media (max-width: 480px) {
+    nav {
+        padding: 0.8rem 1rem;
+    }
+
+    .logo {
+        font-size: 1.4rem;
+    }
+
+    nav .btn {
+        margin-left: 0;
+        margin-right: auto;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .nav-links {
+        justify-content: flex-start;
+    }
+
     .hero-content h1 {
-        font-size: 2.5rem;
+        font-size: 2rem;
     }
     
     .hero-content p {
-        font-size: 1.1rem;
+        font-size: 1rem;
     }
 
     .modal-avatar-area {
-        flex: 0 0 40dvh;
-        min-height: 40dvh;
+        flex: 0 0 34dvh;
+        min-height: 34dvh;
     }
 
     .modal-sidebar {
-        height: 60dvh;
+        height: 66dvh;
+    }
+
+    .chat-header {
+        padding: 14px 16px;
+    }
+
+    .chat-title {
+        font-size: 1rem;
+    }
+
+    .chat-status {
+        font-size: 0.75rem;
+    }
+
+    .chat-messages {
+        padding: 14px 16px;
+        gap: 12px;
+    }
+
+    .chat-bubble {
+        max-width: 92%;
+        font-size: 0.9rem;
+        padding: 11px 14px;
+    }
+
+    .chat-input-area {
+        padding: 12px 14px;
+        gap: 8px;
+    }
+
+    .chat-input-area input {
+        padding: 10px 14px;
+        font-size: 0.9rem;
+    }
+
+    .chat-send,
+    .chat-attach {
+        width: 38px;
+        height: 38px;
     }
 }
